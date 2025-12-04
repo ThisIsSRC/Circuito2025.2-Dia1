@@ -5,35 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Circuito - 2025.2</title>
     <style>
-        /* ...existing styles... (mantidos iguais ao arquivo original) ... */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
+    /* Fundo padrão: COMPUTADOR */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-image: url('https://i.imgur.com/EPG49RE.jpg'); /* imagem do PC */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    /* Tela de carregamento – mesmo fundo do PC por padrão */
+    #loadingScreen {
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%; 
+        background-image: url('https://i.imgur.com/EPG49RE.jpg'); /* imagem do PC */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        z-index: 9999;
+        text-align: center;
+    }
+
+    /* Fundo para CELULAR (até 768px) */
+    @media (max-width: 768px) {
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-image: url(https://imgur.com/EPG49RE.jpg);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            background-image: url('https://i.imgur.com/jpNZOMY.jpg'); /* imagem do CELULAR */
         }
 
-        .container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            max-width: 800px;
-            width: 100%;
-            min-height: 500px;
-            padding: 40px;
+        #loadingScreen {
+            background-image: url('https://i.imgur.com/jpNZOMY.jpg'); /* imagem do CELULAR */
         }
+    }
+
+    .container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        max-width: 800px;
+        width: 100%;
+        min-height: 500px;
+        padding: 40px;
+    }
+
 
         .page {
             display: none;
@@ -437,7 +467,6 @@
         width: 100%; 
         height: 100%; 
         
-        /* IMAGEM DO DESKTOP */
         background-image: url('https://i.imgur.com/EPG49RE.jpg');
         background-size: cover;
         background-position: center;
@@ -448,24 +477,13 @@
         align-items: center; 
         z-index: 9999;">
         
+    <div id="loadingScreen">
     <div class="loading-container" style="width: 100%; text-align: center;">
         <div class="spinner"></div>
         <h2 style="color: white; margin-top: 20px;">Carregando...</h2>
         <p style="color: white; margin-top: 10px;">Preparando o circuito</p>
     </div>
 </div>
-
-<style>
-    /* IMAGEM PARA CELULAR */
-    @media (max-width: 600px) {
-        #loadingScreen {
-            background-image: url('https://imgur.com/jpNZOMY.jpg'); 
-            background-size: cover;
-            background-position: center;
-        }
-    }
-</style>
-
 
 
     <div class="container">
