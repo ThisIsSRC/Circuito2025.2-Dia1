@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuito - 2025.2</title>
+    <style>
+        /* ...existing styles... (mantidos iguais ao arquivo original) ... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url(https://imgur.com/EPG49RE.jpg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            min-height: 500px;
+            padding: 40px;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tela de Carregamento */
+        .loading-container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 500px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2ecc71;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-container h2 {
+            color: #667eea;
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        /* Headers */
+        h1 {
+            color: #2ecc71;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        h2 {
+            color: #1e8449;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        h3 {
+            color: #2ecc71;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        p, li {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Botões */
+        button {
+            background: linear-gradient(135deg, #2ecc71 0%, #1e8449 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .button-group button {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #999 0%, #666 100%);
+        }
+
+        /* Formulários */
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* Questões */
+        .question-page {
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .question-text {
+            background: #f5f5f5;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .options {
+            margin: 20px 0;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .option:hover {
+            background-color: #f0f0f0;
+        }
+
+        .option input[type="radio"] {
+            width: auto;
+            margin-right: 12px;
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        .option label {
+            margin-bottom: 0;
+            cursor: pointer;
+            flex: 1;
+            font-weight: normal;
+        }
+
+        /* Checkbox de Regras */
+        .rules-checkbox {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .rules-checkbox input[type="checkbox"] {
+            width: auto;
+            margin-right: 12px;
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        .rules-checkbox label {
+            margin-bottom: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        /* Código de Confirmação */
+        .code-display {
+            background: #2ecc71;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            font-family: monospace;
+        }
+
+        .code-input-group {
+            margin: 20px 0;
+        }
+
+        /* Resumo de Questões */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .summary-table th,
+        .summary-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .summary-table th {
+            background: #2ecc71;
+            color: white;
+            font-weight: bold;
+        }
+
+        .summary-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .answer-badge {
+            display: inline-block;
+            background: #2ecc71;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        /* Mensagens de Status */
+        .message {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .warning-message {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2ecc71 0%, #1e8449 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsivo */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                min-height: auto;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            p, li {
+                font-size: 14px;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .code-display {
+                font-size: 24px;
+                letter-spacing: 3px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .button-group button {
+                width: 100%;
+            }
+        }
+
+        /* Disabled State */
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button:disabled:hover {
+            box-shadow: none;
+        }
+
+        .info-box {
+            background: #ebffef;
+            border-left: 4px solid #1e8449;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .info-box strong {
+            color: #1e8449;
+        }
+
+        .rules-box {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .page-indicator {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela de Carregamento (fora do container) -->
+    <div id="loadingScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+        <div class="loading-container" style="width: 100%;">
+            <div class="spinner"></div>
+            <h2 style="color: white; margin-top: 20px;">Carregando...</h2>
+            <p style="color: white; margin-top: 10px;">Preparando o circuito</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="app-content"></div>
+    </div>
+
+    <script>
+        // ===== ESTADO GLOBAL =====
+        const appState = {
+            currentPage: 0,
+            teamName: '',
+            answers: {},
+            selectedYear: '6', // série selecionada (6,7,8,9)
+            firstDiscipline: 'Português',
+            secondDiscipline: 'Inglês',
+            securityCode: '',
+            timestamp: ''
+        };
+
+        // ===== DADOS DAS QUESTÕES (organizado por série) =====
+        const questionsData = {
+            '6': {
+                'Português': [
+                    // ...existing 6º ano Português (copiado do arquivo ativo)...
+                    { id: 'portugues_q1', number: 1, text: 'A invisibilidade social dos trabalhadores informais desmerece a contribuição que eles oferecem. A sociedade parece ignorar que a enxurrada de burocracia, muitas vezes, serve apenas para empobrecer aqueles que já se encontram em situação vulnerável.<br><br>O processo de formação da palavra <strong>"empobrecer"</strong> se assemelha estruturalmente ao de outra palavra listada abaixo, justamente por exigir a adição simultânea de prefixo e sufixo.', options: ['Desmerece','Invisibilidade','Anoitecer','Irregularmente'], correct_answer: 'C' },
+                    { id: 'portugues_q2', number: 2, text: 'Os antigos exploradores, ao se depararem com a vastidão do território, muitas vezes utilizavam termos que descreviam diretamente o ambiente. Assim, lugares com aguardente natural ou solo de cor rubra eram batizados sem cerimônia. A planície que se estendia além do horizonte inspirava, no entanto, a criação de nomes mais poéticos.<br><br>A palavra <strong>"aguardente"</strong> é o resultado de um processo de composição que se caracteriza pela:', options: ['Derivação Parassintética, pois adicionou-se a (prefixo) e ente (sufixo) ao radical guard.','Composição por Justaposição, pois uniu-se água e ardente sem alteração fonética significativa.','Derivação Sufixal, a partir do verbo aguardar.','Composição por Aglutinação, pela união dos radicais água e ardente com perda fonética da vogal a.'], correct_answer: 'D' },
+                    { id: 'portugues_q3', number: 3, text: 'O protagonista, um jovem desesperado, reunia forças para enfrentar o desafio. Ele não escrevera uma carta de despedida, pois pretendia voltar. Sua fé, ainda que inabalável, desaparecia em momentos de extrema provação.<br><br>Qual palavra, dentre as opções, <strong>NÃO</strong> é formada pelo processo de <strong>Derivação Parassintética</strong>, embora possua prefixo e sufixo?', options: ['Desaparecer','Endurecer','Enraizar','Desesperado'], correct_answer: 'D' },
+                    { id: 'portugues_q4', number: 4, text: 'O time de futebol, um verdadeiro pernalonga no campo, finalizou o campeonato com um saldo surpreendente. A falta de passatempo para os torcedores, durante a semana, era evidente, e a expectativa para a próxima temporada é alta. O novo estádio promete ser um ponto-final na era de má sorte do clube.<br><br>A alternativa que apresenta um par de palavras formadas <strong>EXCLUSIVAMENTE</strong> por <strong>Composição por Justaposição</strong> é:', options: ['Ponto-final e pernalonga.','Ponto-final e passatempo.','Passatempo e beija-flor.','Período e guarda-sol.'], correct_answer: 'B' },
+                    { id: 'portugues_q5', number: 5, text: 'A supervisão da obra ficou subentendida, Não houve prazos, só a ponta do girassol Acompanhando o tempo, sempre infindável. A vida, simplesmente, recomeça com o sol.<br><br>O processo de formação das palavras <strong>"supervisão"</strong> e <strong>"girassol"</strong> segue, respectivamente, os processos de:', options: ['Derivação Parassintética e Composição por Aglutinação.','Derivação Prefixal e Composição por Justaposição.','Derivação Sufixal e Composição por Aglutinação.','Derivação Prefixal e Derivação Parassintética.'], correct_answer: 'B' },
+                    { id: 'portugues_q6', number: 6, text: 'O novo relatório destacou a fragilidade do sistema de distribuição hídrica. A principal crítica recaiu sobre o manejo obrigatório das reservas, que pôde ser mais eficiente. A solução dependia de medidas drásticas e únicas.<br><br>Qual palavra presente no texto <strong>NÃO</strong> segue a regra de acentuação gráfica da Proparoxítona, embora possua três ou mais sílabas e seja acentuada?', options: ['Crítica','Obrigatório','Únicas','Frágeis (forma plural da palavra fragilidade do texto)'], correct_answer: 'B' },
+                    { id: 'portugues_q7', number: 7, text: 'Navego rumo a um país que caiu no esquecimento. A lembrança diminuiu, mas o coração ainda dói. Se a saudade persistir, levarei este papel para lá. Tudo se resume a um só momento.<br><br>A palavra <strong>oxítona</strong> presente no texto, que é acentuada é:', options: ['Ainda','Coração','Papel','Só'], correct_answer: 'D' },
+                    { id: 'portugues_q8', number: 8, text: 'É obrigatório que o aluno mantenha a paciência no pátio. O uso indevido de materiais é proibido, e o descumprimento das normas pode acarretar sérias consequências. A disciplina é o único caminho.<br><br>A palavra do texto que, apesar de parecer uma Proparoxítona mas na verdade, é classificada como <strong>Paroxítona</strong> por conta de um ditongo, é:', options: ['Único','Sérias','Paciência','Uso'], correct_answer: 'C' },
+                    { id: 'portugues_q9', number: 9, text: 'A tecnologia reúne pessoas e dispersa a atenção. O juiz da corte instruiu as partes sobre a necessidade de saúde mental. O tempo em que ruía a capacidade de concentração ficou para trás.<br><br>Assinale a alternativa que apresenta, respectivamente, uma palavra <strong>Paroxítona</strong> e uma palavra <strong>Oxítona</strong>, ambas acentuadas devido à regra de <strong>Hiato</strong>:', options: ['Reúne e Saúde','Juiz e Instruiu','Ruía e Saúde','Reúne e Saúde'], correct_answer: 'C' },
+                    { id: 'portugues_q10', number: 10, text: 'Alegria não se mede. De cem em cem, o dia esvai-se, No mesmo lugar onde o primeiro pensamento nasceu. Milhares de gotas de chuva caem, Mas bastam duas para o coração saber o que é dor.<br><br>No verso <strong>"Milhares"</strong> de gotas de chuva caem", a utilização da palavra destacada (<strong>milhares</strong>) provoca um efeito de sentido que se aproxima de:', options: ['Um Numeral Cardinal, pois indica a contagem exata das gotas.','Um Numeral Ordinal, pois indica a posição da gota mais importante.','Um Pronome Pessoal, substituindo o substantivo chuva.','Um Pronome Indefinido, reforçando o sentido de uma quantidade não precisa e grandiosa.'], correct_answer: 'D' },
+                    { id: 'portugues_q11', number: 11, text: 'O porteiro afirmou que apenas o quinto andar estava ocupado naquela manhã fria. O quinze era o número favorito do morador mais velho, sempre repetido em senhas e jogos. Ele prometeu que voltaria para ver o dobro da alegria em seus netos.<br><br>Em relação à classificação dos numerais, a palavra <strong>"quinze"</strong> é um Numeral Cardinal que, no contexto em que se encontra, exerce a função morfológica de:', options: ['Adjetivo, concordando com um substantivo subentendido (número).','Substantivo, pois é precedido de artigo (o) e nomeia o número em si.','Pronome Demonstrativo, indicando a posição do número na sequência.','Numeral Multiplicativo, indicando o aumento de algo.'], correct_answer: 'B' },
+                    { id: 'portugues_q12', number: 12, text: 'O autor, em sua Terceira obra, atingiu o ápice da sua maturidade estilística. O Primeiro capítulo, no entanto, é o que gera maior controvérsia, pois apresenta uma visão dupla da moralidade. Muitos críticos acreditam que o verdadeiro valor da obra reside apenas nos dois terços finais do enredo.<br><br>O uso do Numeral Ordinal <strong>"Terceira"</strong> (em Terceira obra), em contraste com o Numeral Cardinal (como se fosse Três obras), visa gerar um efeito de sentido de:', options: ['Intensificação, sugerindo que a obra é triplamente mais valiosa que as anteriores.','Sequência e Hierarquia, estabelecendo a posição cronológica da obra no conjunto da produção do autor.','Fração, indicando que a obra é apenas uma parte da produção total.','Ênfase no caráter de novidade da obra.'], correct_answer: 'B' },
+                    { id: 'portugues_q13', number: 13, text: 'O candidato prometeu que, se eleito, a verba para a saúde teria um aumento quádruplo. No entanto, a base da proposta múltipla era a redução de impostos, o que significaria, para muitos, um décimo do benefício esperado.<br><br>Na frase, o termo <strong>"quádruplo"</strong> é um Numeral Multiplicativo. Qual das alternativas a seguir apresenta um termo que <strong>NÃO</strong> pode ser classificado como <strong>Numeral Multiplicativo</strong>, embora tenha forma semelhante?', options: ['Sêxtuplo.','Múltipla (no contexto do texto).','Duplo.','Quíntuplo.'], correct_answer: 'B' },
+                    { id: 'portugues_q14', number: 14, text: 'O livro era fascinante, e a garota o lia com fervor. De repente, a bibliotecária se aproximou e lhe pediu silêncio. A menina, concentrada, mal se moveu da cadeira. O mundo exterior parecia não lhe pertencer.<br><br>Na análise dos pronomes oblíquos átonos, o único pronome que completa o sentido de um verbo é:', options: ['Lhe (em lhe pediu).','O (em o lia).','Se (em se moveu).','Lhe (em lhe pertencer).'], correct_answer: 'B' },
+                    { id: 'portugues_q15', number: 15, text: 'O relatório indicava que muitos dos problemas eram estruturais, mas a prefeitura alegava que muito já havia sido feito. A população não via nada de melhoria e esperava que alguém tomasse uma atitude mais radical.<br><br>Assinale a alternativa em que os dois vocábulos destacados são classificados, <strong>respectivamente</strong>, como <strong>Pronome Indefinido</strong> e <strong>Advérbio de Intensidade</strong>:', options: ['Muitos e alguém.','Nada e muitos.','Muito e nada.','Muitos e muito.'], correct_answer: 'D' },
+                    { id: 'portugues_q16', number: 16, text: 'O debate foi encerrado com uma única conclusão, que resumia toda a discussão. Esta foi a conclusão: a sociedade deve priorizar o bem comum antes dos interesses individuais. Nossa missão agora é propagar esse ideal.<br><br>No trecho, a função do pronome demonstrativo <strong>"Esta"</strong> é:', options: ['Retomar e resumir a ideia da conclusão já citada.','Coerência, pois estabelece o tempo da conclusão.','Antecipar e anunciar a conclusão que será apresentada a seguir.','Apontar um elemento que está próximo do emissor.'], correct_answer: 'C' },
+                    { id: 'portugues_q17', number: 17, text: '— Você me disse que o rapaz levou seu carro ontem à noite, e isso é preocupante. Quem autorizou?<br>— Sim, ele levou. Mas eu lho emprestei porque meu carro estava na oficina.<br><br>No diálogo, a utilização do pronome possessivo <strong>"seu"</strong> (em seu carro) gera uma ambiguidade de sentido. Assinale a alternativa que indica a dupla de pronomes que poderia ser usada para <strong>solucionar</strong> a ambiguidade de modo a indicar que o carro pertence ao interlocutor (a pessoa com quem se fala):', options: ['Nosso carro.','Carro dele.','Teu carro.','Meu carro.'], correct_answer: 'C' },
+                    { id: 'portugues_q18', number: 18, text: 'Com carinho, peço que todos os documentos sejam enviados para mim. Eu garanto que os resultados chegarão até você com a máxima urgência. A verdade é que ninguém, exceto nós, conseguirá resolver este caso complexo.<br><br>Na análise dos termos destacados, a alternativa que apresenta, respectivamente, um <strong>Pronome Pessoal Reto</strong> e um <strong>Pronome Pessoal Oblíquo Tônico</strong> é:', options: ['Ninguém e eu.','Eu e você.','Mim e nós.','Eu e mim.'], correct_answer: 'D' },
+                    { id: 'portugues_q19', number: 19, text: 'Leia a frase:<br><br>"A professora explicou a atividade para os alunos e depois entregou ___ as folhas de resposta."<br><br>O pronome oblíquo que completa corretamente a frase é:', options: ['lhe','me','nos','lhes'], correct_answer: 'D' },
+                    { id: 'portugues_q20', number: 20, text: 'Assinale a alternativa em que o <strong>pronome oblíquo</strong> está <strong>empregado corretamente</strong>.', options: ['O diretor chamou os pais e explicou os tudo com paciência.','Mariana contou me o que aconteceu na aula.','O professor pediu para que os alunos se organizassem antes de entrar.','Eles disseram que trouxeram os trabalhos e querem mostrar lhe.'], correct_answer: 'C' }
+                ],
+                'Inglês': [
+                    // ...existing 6º Inglês (copiado do arquivo ativo)...
+                    { id: 'ingles_q1', number: 1, text: 'Choose the correct option: <strong>"There are ___ apples in the kitchen."</strong>', options: ['some','any','a','an'], correct_answer: 'A' },
+                    { id: 'ingles_q2', number: 2, text: 'Complete the sentence: <strong>"There aren\'t ___ pencils in my bag."</strong>', options: ['some','any','much','an'], correct_answer: 'B' },
+                    { id: 'ingles_q3', number: 3, text: 'Choose the correct option: <strong>"Do you have ___ brothers or sisters?"</strong>', options: ['some','any','much','many'], correct_answer: 'B' },
+                    { id: 'ingles_q4', number: 4, text: 'Complete the sentence: <strong>"I need ___ help with this homework."</strong>', options: ['some','any','no','many'], correct_answer: 'A' },
+                    { id: 'ingles_q5', number: 5, text: 'Select the correct form: <strong>"She is ___ (run) in the park now."</strong>', options: ['run','running','to run','runs'], correct_answer: 'B' },
+                    { id: 'ingles_q6', number: 6, text: 'Choose the correct option: <strong>"They are ___ (play) soccer."</strong>', options: ['plays','playing','to play','play'], correct_answer: 'B' },
+                    { id: 'ingles_q7', number: 7, text: 'Complete the sentence: <strong>"My mom is ___ (cook) dinner."</strong>', options: ['cook','cooking','to cook','cooked'], correct_answer: 'B' },
+                    { id: 'ingles_q8', number: 8, text: 'Choose the correct –ING form: <strong>"Mark likes ___ (swim) in the afternoon."</strong>', options: ['swiming','swimm','swimming','swim'], correct_answer: 'C' },
+                    { id: 'ingles_q9', number: 9, text: 'Choose the correct genitive form: <strong>"The ___ book is on the table."</strong>', options: ['Maria','Maria\'s','Marias\'','Marias'], correct_answer: 'B' },
+                    { id: 'ingles_q10', number: 10, text: 'Choose the correct option: <strong>"This is my ___ bag."</strong>', options: ['sister','sisters','sister\'s','sisters\''], correct_answer: 'C' },
+                    { id: 'ingles_q11', number: 11, text: 'Complete the sentence: <strong>"Those are the ___ toys."</strong>', options: ['boys','boy','boys\'','boy\'s'], correct_answer: 'C' },
+                    { id: 'ingles_q12', number: 12, text: 'Choose the correct genitive case: <strong>"The ___ house is very big."</strong>', options: ['family','families','family\'s','familys\''], correct_answer: 'C' },
+                    { id: 'ingles_q13', number: 13, text: 'Choose the correct form of the verb to be: <strong>"I ___ 12 years old."</strong>', options: ['am','is','are','be'], correct_answer: 'A' },
+                    { id: 'ingles_q14', number: 14, text: 'Select the correct option: <strong>"They ___ at school now."</strong>', options: ['am','is','are','be'], correct_answer: 'C' },
+                    { id: 'ingles_q15', number: 15, text: 'Complete the sentence: <strong>"She ___ a good student."</strong>', options: ['are','be','am','is'], correct_answer: 'D' },
+                    { id: 'ingles_q16', number: 16, text: 'Choose the correct option: <strong>"We ___ very happy today!"</strong>', options: ['am','is','are','be'], correct_answer: 'C' },
+                    { id: 'ingles_q17', number: 17, text: 'Complete the sentence: <strong>"There are ___ students in the classroom."</strong>', options: ['any','some','much','no'], correct_answer: 'B' },
+                    { id: 'ingles_q18', number: 18, text: 'Choose the correct –ING form: <strong>"The cat is ___ (sleep) on the sofa."</strong>', options: ['sleep','sleeping','to sleep','sleeps'], correct_answer: 'B' },
+                    { id: 'ingles_q19', number: 19, text: 'Select the correct genitive case: <strong>"That is the ___ bike."</strong>', options: ['Tom','Toms','Tom\'s','Toms\''], correct_answer: 'C' },
+                    { id: 'ingles_q20', number: 20, text: 'Choose the correct form of verb to be: <strong>"It ___ cold today."</strong>', options: ['am','are','is','be'], correct_answer: 'C' }
+                ]
+            },
+
+            '7': {
+                'Português': [
+                    { id: '7_pt_q1', number: 1, text: 'Com base nas afirmações a seguir, assinale a alternativa correta.<br>I. Um período é sempre composto por mais de uma oração.<br>II. Uma frase pode ter apenas uma só palavra, desde que tenha sentido completo.<br>III. Uma oração sempre possui um verbo.', options: ['A afirmação III está incorreta.','Todas as afirmações estão corretas.','As afirmações II e III estão corretas.','Nenhuma das afirmações é correta.'], correct_answer: 'C' },
+                    { id: '7_pt_q2', number: 2, text: 'Leia as orações a seguir e assinale a alternativa correta.<br>1. Nós os avisamos das dificuldades do projeto, mas eles não ouviram.<br>2. Um pequeno circo chegou à cidadezinha do interior de São Paulo.<br>3. Não faça barulho porque as crianças estão dormindo.<br><br>I. Na primeira oração, há um período composto.<br>II. Na segunda oração, há um período simples.<br>III. O período composto é sempre constituído em torno de dois ou mais núcleos verbais.<br>IV. Na terceira oração, há um período simples.', options: ['Estão corretas as alternativas I, II e IV.','Somente a alternativa III está correta.','As alternativas I, II e III estão corretas.','Todas as alternativas estão corretas.'], correct_answer: 'C' },
+                    { id: '7_pt_q3', number: 3, text: 'Segundo trecho indicado: “Segundo Waite, esses ambientes são berçários naturais para uma variedade de espécies da fauna e da flora, além de desempenhar um papel importante no equilíbrio da temperatura global [...]”.<br><br>O termo “além de”, neste fragmento, estabelece relação lógico-semântica de:', options: ['condição','concessão','adição','conformidade'], correct_answer: 'C' },
+                    { id: '7_pt_q4', number: 4, text: 'Na oração: “Gosta de ficar em casa, como também gosta de sair”, a conjunção “como também” exprime:', options: ['adversidade','adição','conclusão','alternância'], correct_answer: 'B' },
+                    { id: '7_pt_q5', number: 5, text: 'Coloque 1 para predicado nominal, 2 para verbal e 3 para verbo-nominal. Em seguida, assinale a alternativa com a sequência correta.<br><br>(   ) A mulher parecia assustada com o acidente.<br>(   ) Ele se sentiu ofendido com o comentário.<br>(   ) As crianças brincavam no quintal.', options: ['3 – 1 – 2','1 – 2 – 3','1 – 3 – 2','2 – 3 – 1'], correct_answer: 'C' },
+                    { id: '7_pt_q6', number: 6, text: 'Tendo em vista os tipos de sujeito, é correto afirmar que:', options: ['o sujeito simples pode não possuir seu núcleo explícito na oração.','um sujeito cujo núcleo é aparente na oração pode ser indeterminado.','o pronome “se” pode provocar a indeterminação do sujeito quando seu núcleo não está aparente na oração.','um sujeito no plural é sempre um sujeito composto.'], correct_answer: 'C' },
+                    { id: '7_pt_q7', number: 7, text: 'Considere a oração: "Ontem à noite choveu muito."<br><br>É correto afirmar que:', options: ['o sujeito da oração é “Ontem” e pode ser classificado como simples.','o sujeito da oração é oculto e tem como núcleo o termo “ele”, identificável pela desinência verbal.','o sujeito da oração é “noite” e pode ser classificado como simples.','trata-se de uma oração sem sujeito, que exprime um fenômeno climático.'], correct_answer: 'D' },
+                    { id: '7_pt_q8', number: 8, text: 'Trecho adaptado de Monteiro Lobato (As caçadas de Pedrinho).<br><br>A respeito do parágrafo, no que diz respeito aos tipos de sujeito, está correto afirmar que, no trecho “o mais andejo era o Marquês de Rabicó”:', options: ['o núcleo do sujeito é “Marquês”.','o núcleo do sujeito é “andejo”.','o núcleo do sujeito é “de Rabicó”.','o sujeito é indeterminado.'], correct_answer: 'A' },
+                    { id: '7_pt_q9', number: 9, text: 'No trecho: “mato muito cerrado onde Dona Benta não deixava que os meninos fossem passear”, está correto afirmar que:', options: ['a palavra “cerrado” cumpre a função de adjunto adnominal.','a palavra “meninos” cumpre a função de adjunto adnominal.','a palavra “Benta” cumpre a função de adjunto adnominal.','a palavra “deixava” cumpre a função de adjunto Adnominal.'], correct_answer: 'A' },
+                    { id: '7_pt_q10', number: 10, text: 'Sobre os adjuntos adnominais, é correto afirmar que:', options: ['artigos deixam de ser adjuntos adnominais quando se juntam a preposições.','adjuntos adnominais são sempre, necessariamente, artigos.','artigos são sempre, necessariamente, adjuntos adnominais.','adjuntos adnominais se referem sempre ao sujeito da oração.'], correct_answer: 'C' },
+                    { id: '7_pt_q11', number: 11, text: 'Considerando o verbo “seguir” em “No dia de hoje, seguem os trabalhos de rescaldo e monitoramento na região”, assinale a alternativa em que ele é usado como verbo de ligação, em um predicado nominal.', options: ['Os exploradores seguiram a trilha desconhecida com cautela.','Ela seguiu as instruções do mapa para encontrar o tesouro.','Os alunos seguiram o professor até o laboratório de ciências.','Os amigos seguem animados com a festa surpresa.'], correct_answer: 'D' },
+                    { id: '7_pt_q12', number: 12, text: 'No trecho “O Parque Nacional da Chapada dos Veadeiros está localizado no nordeste do estado de Goiás”, a expressão “no nordeste do estado de Goiás” exerce função de', options: ['adjunto adverbial','predicativo do sujeito','sujeito','predicado'], correct_answer: 'A' },
+                    { id: '7_pt_q13', number: 13, text: 'Trecho com predomínio da sequência discursiva:', options: ['narrativa','descritiva','dissertativa','injuntiva'], correct_answer: 'A' },
+                    { id: '7_pt_q14', number: 14, text: 'Períodos característicos de sequência discursiva:', options: ['narrativa','descritiva','injuntiva','informativa'], correct_answer: 'B' },
+                    { id: '7_pt_q15', number: 15, text: 'Característica de sobreposição de tempos verbais presente em sequências narrativas:', options: ['Os moradores já acendiam suas lanternas e o mercado fervilhava com sons e cores.','O Sol se punha lentamente atrás das montanhas.','Um menino corria entre as barracas, tentou alcançar o pai.','Segurava um cesto cheio de frutas que ameaçava cair.'], correct_answer: 'C' },
+                    { id: '7_pt_q16', number: 16, text: 'Característica essencial das sequências descritivas:', options: ['apresentam eventos sucessivos, narrados em ordem cronológica.','estabelecem instruções ou orientações a serem seguidas pelo leitor.','retratam ações em movimento, com ênfase nos verbos de ação.','destacam-se pela detalhada apresentação de características sensoriais.'], correct_answer: 'D' },
+                    { id: '7_pt_q17', number: 17, text: 'Assinale a frase em que a concordância nominal está correta:', options: ['As menina estudiosa chegaram cedo.','As meninas estudiosas chegaram cedo.','As meninas estudioso chegaram cedo.','A menina estudiosas chegaram cedo.'], correct_answer: 'B' },
+                    { id: '7_pt_q18', number: 18, text: 'O adjetivo anteposto a dois substantivos deve concordar, em regra, com:', options: ['O substantivo mais próximo.','O substantivo mais distante.','O substantivo no plural.','O verbo principal da oração.'], correct_answer: 'A' },
+                    { id: '7_pt_q19', number: 19, text: 'Na frase “As provas difícil e cansativas desanimaram os alunos”, há erro de concordância porque:', options: ['O verbo deveria estar no singular.','O adjetivo deveria concordar com “provas”.','O adjetivo deveria ficar no masculino.','O sujeito deveria estar no plural.'], correct_answer: 'B' },
+                    { id: '7_pt_q20', number: 20, text: 'Na frase “Segue anexa a cópia do contrato”, o adjetivo anexa:', options: ['Pode ser usado no plural ou singular, independentemente do substantivo.','É invariável, pois está no singular.','Concorda com o substantivo “cópia”.','Concorda com o verbo “segue”.'], correct_answer: 'C' }
+                ],
+                'Inglês': [
+                    { id: '7_en_q1', number: 1, text: 'Choose the correct past simple form: <strong>“Yesterday, I ___ (watch) a movie.”</strong>', options: ['watched','watch','watches','watching'], correct_answer: 'A' },
+                    { id: '7_en_q2', number: 2, text: 'They ___ (play) soccer last weekend.', options: ['played','play','playing','plays'], correct_answer: 'A' },
+                    { id: '7_en_q3', number: 3, text: 'My mom ___ (cook) dinner last night.', options: ['cooks','cook','cooked','cooking'], correct_answer: 'C' },
+                    { id: '7_en_q4', number: 4, text: 'I ___ at home yesterday.', options: ['am','is','was','were'], correct_answer: 'C' },
+                    { id: '7_en_q5', number: 5, text: 'They ___ at the park yesterday.', options: ['was','were','is','be'], correct_answer: 'B' },
+                    { id: '7_en_q6', number: 6, text: 'There ___ a big dog in the street.', options: ['were','are','was','be'], correct_answer: 'C' },
+                    { id: '7_en_q7', number: 7, text: 'There ___ many people at the party.', options: ['was','were','is','be'], correct_answer: 'B' },
+                    { id: '7_en_q8', number: 8, text: 'She ___ (study) when I arrived.', options: ['studies','was study','was studying','were studying'], correct_answer: 'C' },
+                    { id: '7_en_q9', number: 9, text: 'They ___ (play) video games at 8 p.m.', options: ['were playing','was playing','played','play'], correct_answer: 'A' },
+                    { id: '7_en_q10', number: 10, text: 'I ___ (sleep) when you called me.', options: ['was slept','were sleeping','was sleeping','sleep'], correct_answer: 'C' },
+                    { id: '7_en_q11', number: 11, text: 'There ___ a problem with the computer yesterday.', options: ['were','be','is','was'], correct_answer: 'D' },
+                    { id: '7_en_q12', number: 12, text: 'There ___ two cats in the garden.', options: ['were','was','be','are'], correct_answer: 'A' },
+                    { id: '7_en_q13', number: 13, text: 'Mary ___ very tired yesterday.', options: ['were','was','is','be'], correct_answer: 'B' },
+                    { id: '7_en_q14', number: 14, text: 'You ___ happy last week.', options: ['was','were','is','be'], correct_answer: 'B' },
+                    { id: '7_en_q15', number: 15, text: 'They ___ (visit) their grandparents last month.', options: ['visit','visited','visiting','visits'], correct_answer: 'B' },
+                    { id: '7_en_q16', number: 16, text: 'He ___ (clean) his room yesterday.', options: ['clean','cleans','cleaned','cleaning'], correct_answer: 'C' },
+                    { id: '7_en_q17', number: 17, text: 'We ___ (walk) to school when it started to rain.', options: ['were walking','was walking','walk','walked'], correct_answer: 'A' },
+                    { id: '7_en_q18', number: 18, text: 'She ___ (dance) at the party when the music stopped.', options: ['was dance','were dancing','was dancing','danced'], correct_answer: 'C' },
+                    { id: '7_en_q19', number: 19, text: 'There ___ a storm last night.', options: ['were','was','is','be'], correct_answer: 'B' },
+                    { id: '7_en_q20', number: 20, text: 'There ___ five students in the library at 10 a.m.', options: ['was','be','were','is'], correct_answer: 'C' }
+                ]
+            },
+
+            '8': {
+                'Português': [
+                    { id: '8_pt_q1', number: 1, text: '“No início ele concordou com o plano, <strong>mas</strong> depois mudou de ideia.”<br><br>A conjunção acima indica:', options: ['Conclusão','Adversidade','Alternância','Explicação'], correct_answer: 'B' },
+                    { id: '8_pt_q2', number: 2, text: '“Não saia agora, <strong>porque</strong> está perigoso.” A conjunção destaca uma oração:', options: ['Explicativa','Conclusiva','Adversativa','Aditiva'], correct_answer: 'A' },
+                    { id: '8_pt_q3', number: 3, text: '“Todos estudaram bastante, <strong>portanto</strong> a nota deve ser boa.” A conjunção exprime:', options: ['Consequência','Explicação','Alternância','Condição'], correct_answer: 'A' },
+                    { id: '8_pt_q4', number: 4, text: '“É necessário que todos participem da reunião.” A oração destacada exerce função de:', options: ['Objeto direto','Sujeito','Predicativo','Complemento nominal'], correct_answer: 'B' },
+                    { id: '8_pt_q5', number: 5, text: '“Ele afirmou <strong>que retornaria amanhã</strong>.” A oração em destaque é:', options: ['Subjetiva','Completiva nominal','Objetiva direta','Apositiva'], correct_answer: 'C' },
+                    { id: '8_pt_q6', number: 6, text: '“Os livros, <strong>estavam na mesa</strong>, foram guardados.” A oração em destaque é:', options: ['Substantiva subjetiva','Adjetiva explicativa','Adjetiva restritiva','Adverbial causal'], correct_answer: 'B' },
+                    { id: '8_pt_q7', number: 7, text: '“As pessoas <strong>que chegaram cedo</strong> foram atendidas primeiro.” A oração desempenha função:', options: ['Explicativa','Restritiva','Completiva nominal','Predicativa'], correct_answer: 'B' },
+                    { id: '8_pt_q8', number: 8, text: 'No trecho: “<strong>Isso</strong> não estava previsto”, o termo destacado é um pronome:', options: ['Pessoal','Demonstrativo','Indefinido','Relativo'], correct_answer: 'B' },
+                    { id: '8_pt_q9', number: 9, text: 'Em “A ideia <strong>que</strong> você apresentou é ótima”, o pronome relativo <strong>que</strong> retoma:', options: ['você','apresentou','ideia','é ótima'], correct_answer: 'C' },
+                    { id: '8_pt_q10', number: 10, text: '“<strong>Alguns</strong> faltaram à reunião.” O pronome destacado indica:', options: ['Totalidade','Indeterminação parcial','Relação de posse','Intensidade'], correct_answer: 'B' },
+                    { id: '8_pt_q11', number: 11, text: 'Assinale a alternativa que apresenta um advérbio de tempo:', options: ['depressa','quase','amanhã','pouco'], correct_answer: 'C' },
+                    { id: '8_pt_q12', number: 12, text: 'No trecho “Ela está <strong>muito</strong> cansada”, o advérbio "muito" indica:', options: ['intensidade','tempo','dúvida','modo'], correct_answer: 'A' },
+                    { id: '8_pt_q13', number: 13, text: 'Em qual alternativa há advérbio de dúvida?', options: ['Certamente haverá novas oportunidades.','Talvez ele tenha novas oportunidades','Ontem as oportunidades eram outras.','Você não “agarrou” as oportunidades, portanto, aceite o trabalho descrito baixo'], correct_answer: 'B' },
+                    { id: '8_pt_q14', number: 14, text: 'Indique a frase com modalização <strong>asseverativa</strong>:', options: ['Talvez ele venha mais tarde.','Ele com certeza virá hoje.','É possível que ele venha.','Quem sabe ele venha?'], correct_answer: 'B' },
+                    { id: '8_pt_q15', number: 15, text: 'Assinale a alternativa que contém modalização <strong>quase-asseverativa</strong>:', options: ['Ele virá, sem dúvida.','Ele provavelmente virá.','Ele virá.','Talvez ele venha.'], correct_answer: 'B' },
+                    { id: '8_pt_q16', number: 16, text: 'Assinale o enunciado com modalização <strong>não asseverativa</strong>:', options: ['Ele virá amanhã.','Ele certamente virá amanhã.','Ele talvez venha amanhã.','Ele, sem dúvida, virá amanhã.'], correct_answer: 'C' },
+                    { id: '8_pt_q17', number: 17, text: 'Em "Quero <strong>que você me explique tudo</strong>", a oração destacada é:', options: ['Adjetiva restritiva','Substantiva objetiva direta','Adverbial causal','Substantiva subjetiva'], correct_answer: 'B' },
+                    { id: '8_pt_q18', number: 18, text: '“Conheci uma pessoa <strong>que entende muito de música</strong>.” A oração adjetiva indica:', options: ['explicação','restrição','consequência','tempo'], correct_answer: 'B' },
+                    { id: '8_pt_q19', number: 19, text: 'Assinale a frase em que o pronome destacado está empregado incorretamente:', options: ['Entre <strong>nós</strong>, não há segredos.','Entre <strong>eu</strong> e você, tudo está resolvido.','Isso é importante para <strong>mim</strong>.','Eles falaram <strong>consigo</strong>.'], correct_answer: 'B' },
+                    { id: '8_pt_q20', number: 20, text: 'Em “Ele <strong>certamente</strong> compreenderá a situação”, o advérbio empregado expressa:', options: ['modo e modalização asseverativa','intensidade e modalização quase-asseverativa','dúvida e modalização não asseverativa','tempo e modalização asseverativa'], correct_answer: 'A' }
+                ],
+                'Inglês': [
+                    { id: '8_en_q1', number: 1, text: 'There isn’t ___ milk in the fridge.', options: ['many','much','a few','several'], correct_answer: 'B' },
+                    { id: '8_en_q2', number: 2, text: 'She bought ___ apples at the market.', options: ['much','a little','a few','little'], correct_answer: 'A' },
+                    { id: '8_en_q3', number: 3, text: 'We don’t have ___ time to finish the project.', options: ['many','a few','much','several'], correct_answer: 'C' },
+                    { id: '8_en_q4', number: 4, text: '___ students were absent today.', options: ['Much','A few','Little','A little'], correct_answer: 'B' },
+                    { id: '8_en_q5', number: 5, text: 'She sings very ___.', options: ['beautiful','beautifully','beauty','beautify'], correct_answer: 'B' },
+                    { id: '8_en_q6', number: 6, text: 'This test is ___ than the last one.', options: ['harder','more hard','hardest','more harder'], correct_answer: 'A' },
+                    { id: '8_en_q7', number: 7, text: 'He is a ___ driver.', options: ['careful','carefully','care','carefulness'], correct_answer: 'A' },
+                    { id: '8_en_q8', number: 8, text: 'The dog ran ___ across the yard.', options: ['quick','quicker','quickly','quickest'], correct_answer: 'C' },
+                    { id: '8_en_q9', number: 9, text: 'Mount Everest is the ___ mountain in the world.', options: ['high','higher','highest','most high'], correct_answer: 'C' },
+                    { id: '8_en_q10', number: 10, text: 'She is the ___ student in the class.', options: ['smartest','more smart','most smarter','smartly'], correct_answer: 'A' },
+                    { id: '8_en_q11', number: 11, text: 'This is the ___ movie I have ever seen.', options: ['more interesting','interesting','most interesting','interest'], correct_answer: 'C' },
+                    { id: '8_en_q12', number: 12, text: 'Look at those clouds! It ___ rain.', options: ['will','is going to','won’t','was going to'], correct_answer: 'B' },
+                    { id: '8_en_q13', number: 13, text: 'I think Brazil ___ win the game tonight.', options: ['is going to','was going to','will','won’t'], correct_answer: 'C' },
+                    { id: '8_en_q14', number: 14, text: 'They ___ visit their grandparents next weekend. (plan)', options: ['will','are going to','going','will going to'], correct_answer: 'B' },
+                    { id: '8_en_q15', number: 15, text: 'Don’t worry. I ___ help you with your homework.', options: ['am going to','will','going','am going'], correct_answer: 'B' },
+                    { id: '8_en_q16', number: 16, text: 'The opposite of “possible” is ___.', options: ['unpossible','impossible','dispossible','nonpossible'], correct_answer: 'B' },
+                    { id: '8_en_q17', number: 17, text: 'Which word means “not correct”?', options: ['incorrect','precorrect','overcorrect','hypercorrect'], correct_answer: 'A' },
+                    { id: '8_en_q18', number: 18, text: '“Rewrite” means:', options: ['write again','write before','write wrong','write less'], correct_answer: 'A' },
+                    { id: '8_en_q19', number: 19, text: 'The prefix in “preview” means:', options: ['after','before','again','no/not'], correct_answer: 'B' },
+                    { id: '8_en_q20', number: 20, text: '“Unhappy” means:', options: ['very happy','a little happy','not happy','always happy'], correct_answer: 'C' }
+                ]
+            },
+
+            '9': {
+                'Português': [
+                    { id: '9_pt_q1', number: 1, text: 'Trecho de Machado de Assis – Dom Casmurro: “Capitu e eu <strong>andávamos</strong> tão satisfeitos!”<br><br>A forma verbal “andávamos” concorda com:', options: ['apenas Capitu','apenas o narrador','Capitu e o narrador','nenhum dos dois'], correct_answer: 'C' },
+                    { id: '9_pt_q2', number: 2, text: 'Trecho de Clarice Lispector – A Hora da Estrela: “Macabéa tinha uma alegria <strong>tímida e silenciosa</strong>.” A concordância entre os adjetivos e o substantivo está correta porque:', options: ['ambos concordam em gênero, mas não em número.','ambos concordam em número, mas não em gênero.','ambos concordam em gênero e número.','há erro de concordância.'], correct_answer: 'C' },
+                    { id: '9_pt_q3', number: 3, text: 'Trecho de Carlos Drummond de Andrade – Poema de Sete Faces: “Quando nasci, um anjo torto / desses que vivem na sombra / disse: Vai, Carlos!” O “anjo torto” constitui um exemplo de:', options: ['eufemismo','metáfora','onomatopeia','metonímia'], correct_answer: 'B' },
+                    { id: '9_pt_q4', number: 4, text: 'Trecho de Cecília Meireles – Motivo: “Eu canto porque o instante existe e a minha vida está completa.” No verso, há personificação porque:', options: ['“instante” recebe ação humana.','“vida” é comparada a um objeto.','“canto” é usado como metáfora.','“existe” tem sentido figurado.'], correct_answer: 'A' },
+                    { id: '9_pt_q5', number: 5, text: 'Trecho de Fernando Pessoa – Mensagem: “Tudo vale a pena se a alma <strong>não é pequena</strong>.” Caso o verso fosse reescrito com o pronome “se” deslocado, a forma correta seria:', options: ['Se vale tudo a pena…','Tudo se vale a pena…','Vale-se tudo a pena…','Tudo vale-se a pena…'], correct_answer: 'C' },
+                    { id: '9_pt_q6', number: 6, text: 'Trecho de José de Alencar – Senhora: “<strong>Aurélia</strong>, disse ele, posso explicar tudo.” O termo destacado exerce função de:', options: ['aposto','vocativo','sujeito','adjunto adnominal'], correct_answer: 'B' },
+                    { id: '9_pt_q7', number: 7, text: 'Trecho de Guimarães Rosa – Grande Sertão: Veredas: “Riobaldo, <strong>um homem de coragem</strong>, enfrentou o desconhecido.” O trecho destacado é um:', options: ['vocativo','aposto especificativo','aposto explicativo','complemento nominal'], correct_answer: 'C' },
+                    { id: '9_pt_q8', number: 8, text: 'Trecho de Euclides da Cunha – Os Sertões: “A figura de <strong>Antônio Conselheiro</strong> dominava tudo.” O termo destacado funciona como:', options: ['aposto explicativo','aposto especificativo','vocativo','predicativo'], correct_answer: 'B' },
+                    { id: '9_pt_q9', number: 9, text: 'Trecho adaptado de Machado de Assis – Memórias Póstumas: “Só desejo uma coisa: <strong>que todos me ouçam</strong>.” A oração destacada é:', options: ['subjetiva','completiva nominal','apositiva','objetiva direta'], correct_answer: 'C' },
+                    { id: '9_pt_q10', number: 10, text: 'Trecho adaptado de Lima Barreto – Clara dos Anjos: “Ela tinha esperança <strong>de que tudo melhorasse</strong>.” A oração introduzida por “de que” é:', options: ['completiva nominal','apositiva','objetiva indireta','adjetiva explicativa'], correct_answer: 'A' },
+                    { id: '9_pt_q11', number: 11, text: 'Trecho de José de Alencar – O Guarani: “A moça <strong>que ele viu</strong> sorriu timidamente.” A oração destacada é:', options: ['adjetiva explicativa','adjetiva restritiva','substantiva subjetiva','adverbial causal'], correct_answer: 'B' },
+                    { id: '9_pt_q12', number: 12, text: 'Trecho de Machado de Assis – Quincas Borba: “Rubião, <strong>que era muito confiado</strong>, acabou enganado.” A oração destacada:', options: ['restringe o sentido de “Rubião”','explica uma característica adicional do termo','equivale a um adjunto adverbial','exerce função de sujeito'], correct_answer: 'B' },
+                    { id: '9_pt_q13', number: 13, text: 'Trecho adaptado de Aluísio Azevedo – O Cortiço: “A vizinhança estava agitada, <strong>porque havia rumores estranhos</strong>.” A oração destacada é:', options: ['temporal','concessiva','causal','final'], correct_answer: 'C' },
+                    { id: '9_pt_q14', number: 14, text: 'Trecho adaptado de Manuel Bandeira: “<strong>Embora estivesse cansado</strong>, continuou caminhando.” A oração introduzida por “embora” indica:', options: ['causa','condição','concessão','tempo'], correct_answer: 'C' },
+                    { id: '9_pt_q15', number: 15, text: 'Trecho adaptado de Machado de Assis: “<strong>Se você vier</strong>, conversaremos.” A oração destacada é:', options: ['adjetiva restritiva','substantiva apositiva','adverbial condicional','adverbial comparativa'], correct_answer: 'C' },
+                    { id: '9_pt_q16', number: 16, text: 'Trecho adaptado de José de Alencar: “Chegaram ao vilarejo <strong>os soldados e o capitão</strong>.” A concordância está correta porque o verbo:', options: ['concorda com o núcleo mais próximo','concorda com o núcleo distante','está no singular para indicar generalidade','concorda com o sujeito composto posposto'], correct_answer: 'D' },
+                    { id: '9_pt_q17', number: 17, text: 'Trecho de Machado de Assis – Memórias Póstumas: “Marcela amou-me por quinze meses e onze contos de réis.” O trecho revela ironia porque:', options: ['há comparação implícita','se atribui sentimento a objeto','sugere-se o contrário do que se afirma','utiliza-se exagero'], correct_answer: 'C' },
+                    { id: '9_pt_q18', number: 18, text: 'Trecho adaptado de João Cabral de Melo Neto: “<strong>Quando me lembro</strong>, sinto outra vez a secura do sertão.” A próclise ocorre por causa da presença de:', options: ['verbo no infinitivo','locução verbal','pronome relativo','palavra atrativa'], correct_answer: 'D' },
+                    { id: '9_pt_q19', number: 19, text: 'Trecho de Monteiro Lobato – Reinações de Narizinho: “— <strong>Narizinho</strong>, venha cá imediatamente!” O termo destacado é:', options: ['aposto','sujeito','adjunto adnominal','vocativo'], correct_answer: 'D' },
+                    { id: '9_pt_q20', number: 20, text: 'Trecho adaptado de Graciliano Ramos – Infância: “Meu pai, <strong>homem rígido e severo</strong>, não permitia atrasos.” O aposto está corretamente concordado porque:', options: ['mantém o feminino plural em todos os termos','apresenta adjetivos neutros, sem marca de gênero','concorda em gênero e número com “homem”','funciona como complemento nominal'], correct_answer: 'C' }
+                ],
+                'Inglês': [
+                    { id: '9_en_q1', number: 1, text: 'You ___ wear a helmet when riding a motorcycle. It’s the law.', options: ['should','may','must','might'], correct_answer: 'C' },
+                    { id: '9_en_q2', number: 2, text: 'You look sick. You ___ see a doctor.', options: ['must','should','may','have to'], correct_answer: 'B' },
+                    { id: '9_en_q3', number: 3, text: 'I’m not sure, but it ___ rain later.', options: ['must','should','might','have to'], correct_answer: 'C' },
+                    { id: '9_en_q4', number: 4, text: 'Students ___ turn off their phones during the test.', options: ['might','have to','should','may'], correct_answer: 'B' },
+                    { id: '9_en_q5', number: 5, text: 'You ___ eat so much sugar. It’s unhealthy.', options: ['must','might','should','may'], correct_answer: 'C' },
+                    { id: '9_en_q6', number: 6, text: 'She ___ be at home, but I’m not sure.', options: ['must','may','have to','should'], correct_answer: 'B' },
+                    { id: '9_en_q7', number: 7, text: 'I ___ finish this project today because the deadline is tomorrow.', options: ['may','must','might','should'], correct_answer: 'B' },
+                    { id: '9_en_q8', number: 8, text: 'We ___ arrive early to get good seats, but it’s not required.', options: ['must','have to','should','might'], correct_answer: 'C' },
+                    { id: '9_en_q9', number: 9, text: 'He ___ go to the party, but he hasn’t decided yet.', options: ['should','must','might','have to'], correct_answer: 'C' },
+                    { id: '9_en_q10', number: 10, text: 'You ___ ask the teacher if you can leave the classroom.', options: ['must','may','might','have to'], correct_answer: 'B' },
+                    { id: '9_en_q11', number: 11, text: 'I ___ clean my room today. My mom told me to.', options: ['may','should','have to','might'], correct_answer: 'C' },
+                    { id: '9_en_q12', number: 12, text: 'You ___ smoke here. It’s forbidden.', options: ['should not','may not','must not','might not'], correct_answer: 'C' },
+                    { id: '9_en_q13', number: 13, text: 'He ___ study harder if he wants to pass the test.', options: ['must','might','may','should'], correct_answer: 'D' },
+                    { id: '9_en_q14', number: 14, text: 'We ___ take an umbrella. It ___ rain later.', options: ['should / might','must / may','may / should','might / must'], correct_answer: 'A' },
+                    { id: '9_en_q15', number: 15, text: 'You ___ arrive late again. It’s very important.', options: ['must not','may not','should','might'], correct_answer: 'A' },
+                    { id: '9_en_q16', number: 16, text: 'She ___ go to the doctor; she isn’t feeling well.', options: ['might','should','may','must'], correct_answer: 'B' },
+                    { id: '9_en_q17', number: 17, text: 'Visitors ___ wear an ID badge inside the building.', options: ['might','must','should','may'], correct_answer: 'B' },
+                    { id: '9_en_q18', number: 18, text: 'You ___ take pictures inside the museum. It’s allowed.', options: ['may','must','should','might'], correct_answer: 'A' },
+                    { id: '9_en_q19', number: 19, text: 'He ___ be the new teacher. I’m not sure yet.', options: ['must','might','have to','should'], correct_answer: 'B' },
+                    { id: '9_en_q20', number: 20, text: 'I ___ wake up early tomorrow because I have an appointment.', options: ['must','may','might','should'], correct_answer: 'A' }
+                ]
+            }
+        };
+
+        // ===== PÁGINAS =====
+        const pages = [
+            {
+                name: 'welcome',
+                render: () => `
+                    <h1>🎉 Bem-vindos ao Circuito 2025.2!</h1>
+                    <p>Escolha a série (ano) que realizará o circuito hoje:</p>
+
+                    <div class="form-group">
+                        <label for="selectYear">Série / Ano:</label>
+                        <select id="selectYear" onchange="app.selectYear(this.value)">
+                            <option value="6" ${appState.selectedYear === '6' ? 'selected' : ''}>6º Ano</option>
+                            <option value="7" ${appState.selectedYear === '7' ? 'selected' : ''}>7º Ano</option>
+                            <option value="8" ${appState.selectedYear === '8' ? 'selected' : ''}>8º Ano</option>
+                            <option value="9" ${appState.selectedYear === '9' ? 'selected' : ''}>9º Ano</option>
+                        </select>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>ℹ️ Informações do Circuito:</strong>
+                        <ul style="margin-top: 10px;">
+                            <li><strong>Total de Questões:</strong> 40 questões</li>
+                            <li><strong>Disciplinas:</strong> Português e Inglês</li>
+                            <li><strong>Objetivo:</strong> Responder corretamente o máximo de questões possível</li>
+                        </ul>
+                    </div>
+
+                    <p style="margin-top: 20px;">Ao selecionar a série, o conjunto de questões correspondente será carregado. Verifique se selecionou a série correta antes de prosseguir.</p>
+
+                    <button onclick="app.nextPage()">Continuar →</button>
+                `
+            },
+            {
+                name: 'how-works',
+                render: () => `
+                    <h1>Como o Circuito Funciona?</h1>
+                    <div class="info-box">
+                        <strong>📋 Passo a Passo:</strong>
+                        <ol style="margin-top: 10px;">
+                            <li>Você informará o nome da sua equipe</li>
+                            <li>Responderá 20 questões da primeira disciplina</li>
+                            <li>Passará para a segunda disciplina com mais 20 questões</li>
+                            <li>Poderá revisar e confirmar o envio</li>
+                            <li>Confirmará o envio com um código de segurança</li>
+                        </ol>
+                    </div>
+                    <p style="margin-top: 20px; background: #fff3cd; padding: 15px; border-radius: 5px;">
+                        <strong>⏱️ Importante:</strong> O limite de tempo será definido pelos professores responsáveis de acordo com o horário de início, mas procure responder com atenção. Você poderá revisar suas respostas antes de confirmar o envio final.
+                    </p>
+                    <div class="button-group">
+                        <button class="btn-secondary" onclick="app.previousPage()">← Voltar</button>
+                        <button onclick="app.nextPage()">Próximo →</button>
+                    </div>
+                `
+            },
+            {
+                name: 'rules',
+                render: () => `
+                    <h1>📜 Regras e Termos</h1>
+                    <div class="rules-box">
+                        <h3>Regras Gerais:</h3>
+                        <ul>
+                            <li>Apenas uma resposta é permitida por questão</li>
+                            <li>Você pode revisar e alterar suas respostas a qualquer momento antes do envio final</li>
+                            <li>O envio final é irreversível</li>
+                            <li>Respeite o código de ética da escola durante o teste</li>
+                            <li>Não compartilhe suas respostas com outras equipes</li>
+                            <li>Todos os membros da equipe devem estar presentes durante o teste</li>
+                        </ul>
+                        <h3 style="margin-top: 20px;">Termo de Aceite:</h3>
+                        <p>
+                            Ao marcar "Aceito", você confirma que sua equipe:
+                        </p>
+                        <ul>
+                            <li>Compreende todas as regras acima</li>
+                            <li>Concorda em participar eticamente</li>
+                            <li>Autoriza o registro de suas respostas</li>
+                            <li>Aceita os resultados como finais</li>
+                        </ul>
+                    </div>
+
+                    <div class="rules-checkbox">
+                        <input type="checkbox" id="termsAccept">
+                        <label for="termsAccept">Concordo com as regras e aceito os termos</label>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn-secondary" onclick="app.previousPage()">← Voltar</button>
+                        <button onclick="app.nextPage()" id="acceptBtn" disabled>Aceitar e Continuar →</button>
+                    </div>
+                `
+            },
+            {
+                name: 'team-name',
+                render: () => `
+                    <h1>Identificação da Equipe</h1>
+                    <p>Qual é o nome da sua equipe? Este nome será registrado nas suas respostas.</p>
+                    
+                    <div class="form-group">
+                        <label for="teamName">Nome da Equipe:</label>
+                        <input type="text" id="teamName" placeholder="Digite o nome da sua equipe" required>
+                    </div>
+
+                    <div class="message info-box" style="background: #e7f3ff;">
+                        <strong>💡 Importante:</strong> Informe a série e numeração da sua equipe da seguinte forma:<br>
+                        <strong>Série + Equipe + Número</strong><br>
+                        <em>Exemplo: 7 Equipe 2</em>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn-secondary" onclick="app.previousPage()">← Voltar</button>
+                        <button onclick="app.nextPage()" id="teamNameBtn" disabled>Continuar →</button>
+                    </div>
+                `
+            }
+        ];
+
+        // ===== APLICAÇÃO =====
+        const app = {
+            init() {
+                this.setupEventListeners();
+                this.render();
+                
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').style.display = 'none';
+                }, 1000);
+            },
+
+            setupEventListeners() {
+                document.addEventListener('change', (e) => {
+                    if (e.target.id === 'termsAccept') {
+                        document.getElementById('acceptBtn').disabled = !e.target.checked;
+                    }
+                });
+
+                document.addEventListener('input', (e) => {
+                    if (e.target.id === 'teamName') {
+                        document.getElementById('teamNameBtn').disabled = !e.target.value.trim();
+                    }
+                    if (e.target.id === 'codeInput') {
+                        const btn = document.getElementById('submitBtn');
+                        if (btn) btn.disabled = e.target.value.length !== 5;
+                    }
+                });
+            },
+
+            render() {
+                const content = document.getElementById('app-content');
+                const page = pages[appState.currentPage];
+                
+                if (page) {
+                    content.innerHTML = page.render();
+                }
+            },
+
+            nextPage() {
+                if (appState.currentPage === 2) { // Regras
+                    if (!document.getElementById('termsAccept').checked) {
+                        alert('Você precisa aceitar os termos para continuar!');
+                        return;
+                    }
+                }
+
+                if (appState.currentPage === 3) { // Nome da equipe
+                    const teamName = document.getElementById('teamName').value.trim();
+                    if (!teamName) {
+                        alert('Por favor, insira o nome da equipe!');
+                        return;
+                    }
+                    appState.teamName = teamName;
+                    this.startQuestions();
+                    return;
+                }
+
+                if (appState.currentPage < pages.length - 1) {
+                    appState.currentPage++;
+                    this.render();
+                }
+            },
+
+            previousPage() {
+                if (appState.currentPage > 0) {
+                    appState.currentPage--;
+                    this.render();
+                }
+            },
+
+            selectYear(value) {
+                appState.selectedYear = value;
+            },
+
+            startQuestions() {
+                // garante que o fluxo use a série selecionada
+                this.showQuestion(appState.firstDiscipline, 0);
+            },
+
+            showQuestion(discipline, questionIndex) {
+                const disciplineQuestions = questionsData[appState.selectedYear][discipline];
+                const question = disciplineQuestions[questionIndex];
+                const isFirstDiscipline = discipline === appState.firstDiscipline;
+                const totalQuestions = disciplineQuestions.length;
+
+                const content = document.getElementById('app-content');
+                let html = `
+                    <div class="page-indicator">Questão ${questionIndex + 1} de ${totalQuestions} - ${discipline} (Série ${appState.selectedYear}º)</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${((questionIndex + 1) / totalQuestions) * 100}%"></div>
+                    </div>
+
+                    <div class="question-number">${discipline} - Questão ${question.number}</div>
+                    
+                    <div class="question-text">
+                        <p>${question.text}</p>
+                    </div>
+
+                    <div class="options">
+                        ${question.options.map((option, idx) => {
+                            const letter = String.fromCharCode(65 + idx);
+                            return `
+                                <div class="option">
+                                    <input type="radio" id="opt_${question.id}_${letter}" name="${question.id}" value="${letter}"
+                                        ${appState.answers[question.id] === letter ? 'checked' : ''}
+                                        onchange="app.saveAnswer('${question.id}', '${letter}')">
+                                    <label for="opt_${question.id}_${letter}">${letter}) ${option}</label>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <div class="button-group">
+                        ${questionIndex > 0 ? `<button class="btn-secondary" onclick="app.previousQuestion('${discipline}', ${questionIndex})">← Questão Anterior</button>` : ''}
+                        ${questionIndex < totalQuestions - 1 
+                            ? `<button onclick="app.nextQuestion('${discipline}', ${questionIndex})">Próxima Questão →</button>` 
+                            : (isFirstDiscipline 
+                                ? `<button onclick="app.showDisciplineChange()">Finalizar Primeira Disciplina →</button>`
+                                : `<button onclick="app.showReview()">Ir para Revisão →</button>`
+                            )
+                        }
+                    </div>
+                `;
+
+                content.innerHTML = html;
+            },
+
+            nextQuestion(discipline, currentIndex) {
+                const max = questionsData[appState.selectedYear][discipline].length;
+                if (currentIndex < max - 1) {
+                    this.showQuestion(discipline, currentIndex + 1);
+                }
+            },
+
+            previousQuestion(discipline, currentIndex) {
+                if (currentIndex > 0) {
+                    this.showQuestion(discipline, currentIndex - 1);
+                }
+            },
+
+            saveAnswer(questionId, answer) {
+                appState.answers[questionId] = answer;
+            },
+
+            showDisciplineChange() {
+                const content = document.getElementById('app-content');
+                content.innerHTML = `
+                    <h1>🎉 Parabéns!</h1>
+                    <p style="font-size: 18px; margin: 20px 0;">Você completou todas as questões da primeira disciplina!</p>
+                    
+                    <div class="info-box">
+                        <strong>Próxima Etapa:</strong>
+                        <p>Agora você responderá as questões de ${appState.secondDiscipline}.</p>
+                    </div>
+
+                    <p style="margin-top: 30px;">Prepare-se para a próxima rodada de ${questionsData[appState.selectedYear][appState.secondDiscipline].length} questões. Boa sorte!</p>
+
+                    <div class="button-group">
+                        <button class="btn-secondary" onclick="app.showQuestion('${appState.firstDiscipline}', ${questionsData[appState.selectedYear][appState.firstDiscipline].length - 1})">← Voltar para Última Questão</button>
+                        <button onclick="app.showQuestion('${appState.secondDiscipline}', 0)">Iniciar Segunda Disciplina →</button>
+                    </div>
+                `;
+            },
+
+            showReview() {
+                const content = document.getElementById('app-content');
+                
+                let html = `
+                    <h1>📋 Revise Suas Respostas</h1>
+                    <p>Confira todas as suas respostas antes de enviar. Depois de confirmar, não será possível alterar!</p>
+
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="reviewProgress"></div>
+                    </div>
+
+                    <div id="summaryContent" style="max-height: 400px; overflow-y: auto; margin: 20px 0; border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+                `;
+
+                // Português
+                html += `<h3>${appState.firstDiscipline} (Série ${appState.selectedYear}º)</h3>`;
+                questionsData[appState.selectedYear][appState.firstDiscipline].forEach((q, idx) => {
+                    const answer = appState.answers[q.id];
+                    const answerLetter = answer || 'Não respondida';
+                    const answerText = answer ? q.options[answer.charCodeAt(0) - 65] : 'Não respondida';
+                    
+                    let badge = '';
+                    if (answer) {
+                        badge = `<span class="answer-badge">${answer}</span> - ${answerText}`;
+                    } else {
+                        badge = '<span style="color: #999;">Não respondida</span>';
+                    }
+                    
+                    html += `
+                        <div style="padding: 12px; border-bottom: 1px solid #eee; margin-bottom: 12px; background: #f9f9f9; border-radius: 4px;">
+                            <div style="margin-bottom: 8px;"><strong>Questão ${idx + 1}:</strong></div>
+                            <div style="margin-bottom: 8px; font-size: 14px; color: #555;">${q.text}</div>
+                            <div style="margin-top: 8px;">Sua resposta: ${badge}</div>
+                        </div>
+                    `;
+                });
+
+                // Inglês
+                html += `<h3 style="margin-top: 20px;">${appState.secondDiscipline} (Série ${appState.selectedYear}º)</h3>`;
+                questionsData[appState.selectedYear][appState.secondDiscipline].forEach((q, idx) => {
+                    const answer = appState.answers[q.id];
+                    const answerLetter = answer || 'Não respondida';
+                    const answerText = answer ? q.options[answer.charCodeAt(0) - 65] : 'Não respondida';
+                    
+                    let badge = '';
+                    if (answer) {
+                        badge = `<span class="answer-badge">${answer}</span> - ${answerText}`;
+                    } else {
+                        badge = '<span style="color: #999;">Não respondida</span>';
+                    }
+                    
+                    html += `
+                        <div style="padding: 12px; border-bottom: 1px solid #eee; margin-bottom: 12px; background: #f9f9f9; border-radius: 4px;">
+                            <div style="margin-bottom: 8px;"><strong>Questão ${idx + 1}:</strong></div>
+                            <div style="margin-bottom: 8px; font-size: 14px; color: #555;">${q.text}</div>
+                            <div style="margin-top: 8px;">Sua resposta: ${badge}</div>
+                        </div>
+                    `;
+                });
+
+                html += `
+
+                    </div>
+
+                    <h3>Código de Segurança</h3>
+                    <p>Para enviar, digite o código de 5 dígitos mostrado abaixo:</p>
+                    
+                    <div class="code-display" id="securityCode">00000</div>
+
+                    <div class="code-input-group">
+                        <label for="codeInput">Código de Segurança:</label>
+                        <input type="text" id="codeInput" placeholder="Digite os 5 dígitos aqui" maxlength="5" pattern="\\d{5}">
+                    </div>
+
+                    <div id="codeError" class="message error-message" style="display: none;">
+                        Código incorreto! Verifique e tente novamente.
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn-secondary" onclick="app.showQuestion('${appState.secondDiscipline}', ${questionsData[appState.selectedYear][appState.secondDiscipline].length - 1})">← Voltar</button>
+                        <button onclick="app.submitAnswers()" id="submitBtn" disabled>Enviar Respostas</button>
+                    </div>
+                `;
+
+                content.innerHTML = html;
+                this.generateSecurityCode();
+                this.updateReviewProgress();
+            },
+
+            generateSecurityCode() {
+                appState.securityCode = Math.floor(10000 + Math.random() * 90000).toString();
+                document.getElementById('securityCode').textContent = appState.securityCode;
+            },
+
+            updateReviewProgress() {
+                const totalQuestions = (questionsData[appState.selectedYear][appState.firstDiscipline].length || 0) + (questionsData[appState.selectedYear][appState.secondDiscipline].length || 0);
+                const answered = Object.keys(appState.answers).filter(k => {
+                    // contar apenas respostas que pertencem à série selecionada
+                    return (k.startsWith(`${appState.selectedYear}_`) || k.includes('_pt_') || k.includes('_en_') || k.startsWith('portugues_') || k.startsWith('ingles_')) ? true : true;
+                }).length;
+                const percentage = totalQuestions ? (answered / totalQuestions) * 100 : 0;
+                const el = document.getElementById('reviewProgress');
+                if (el) el.style.width = `${percentage}%`;
+            },
+
+            submitAnswers() {
+                const inputCode = document.getElementById('codeInput').value;
+                
+                if (inputCode !== appState.securityCode) {
+                    document.getElementById('codeError').style.display = 'block';
+                    return;
+                }
+
+                // Calcular acertos totais e por disciplina dinamicamente
+                let totalCorrect = 0;
+                let portuguesCorrect = 0;
+                let inglesCorrect = 0;
+
+                const portuguesQuestions = questionsData[appState.selectedYear][appState.firstDiscipline];
+                const inglesQuestions = questionsData[appState.selectedYear][appState.secondDiscipline];
+
+                portuguesQuestions.forEach(q => {
+                    if (appState.answers[q.id] === q.correct_answer) {
+                        portuguesCorrect++;
+                        totalCorrect++;
+                    }
+                });
+
+                inglesQuestions.forEach(q => {
+                    if (appState.answers[q.id] === q.correct_answer) {
+                        inglesCorrect++;
+                        totalCorrect++;
+                    }
+                });
+
+                appState.timestamp = new Date().toLocaleString('pt-BR');
+                
+                // Enviar para Google Forms
+                this.sendToGoogleForms(totalCorrect, portuguesCorrect, inglesCorrect);
+            },
+
+            sendToGoogleForms(totalCorrect, portuguesCorrect, inglesCorrect) {
+                const totalQuestions = (questionsData[appState.selectedYear][appState.firstDiscipline].length || 0) + (questionsData[appState.selectedYear][appState.secondDiscipline].length || 0);
+                const totalPercentage = totalQuestions ? ((totalCorrect / totalQuestions) * 100).toFixed(2) : '0.00';
+                const portuguesTotal = questionsData[appState.selectedYear][appState.firstDiscipline].length || 0;
+                const inglesTotal = questionsData[appState.selectedYear][appState.secondDiscipline].length || 0;
+                const portuguesPercentage = portuguesTotal ? ((portuguesCorrect / portuguesTotal) * 100).toFixed(2) : '0.00';
+                const inglesPercentage = inglesTotal ? ((inglesCorrect / inglesTotal) * 100).toFixed(2) : '0.00';
+                
+                // Montar strings com todas as respostas
+                let respostasPortugues = '';
+                questionsData[appState.selectedYear][appState.firstDiscipline].forEach((q, idx) => {
+                    const answer = appState.answers[q.id] || '-';
+                    const answerText = answer ? `${answer} - ${q.options[answer.charCodeAt(0) - 65]}` : '-';
+                    respostasPortugues += `Q${idx + 1}: ${answerText}\n`;
+                });
+
+                let respostasIngles = '';
+                questionsData[appState.selectedYear][appState.secondDiscipline].forEach((q, idx) => {
+                    const answer = appState.answers[q.id] || '-';
+                    const answerText = answer ? `${answer} - ${q.options[answer.charCodeAt(0) - 65]}` : '-';
+                    respostasIngles += `Q${idx + 1}: ${answerText}\n`;
+                });
+
+                // URL do Google Form
+                const formUrl = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSecdqqvjqYR8oOFoZp9euSpSaVM4Xd29TsR80VvNzXqeUVcOg/formResponse';
+                
+                // IDs dos campos 
+                const formData = new FormData();
+                formData.append('entry.278239695', appState.teamName); // Nome da Equipe
+                formData.append('entry.676741744', appState.selectedYear); // Série/Ano
+                formData.append('entry.1129408966', respostasPortugues); // Respostas Português
+                formData.append('entry.1493211415', respostasIngles); // Respostas Inglês
+                formData.append('entry.755646108', `${totalCorrect} (PT: ${portuguesCorrect}/${portuguesTotal} | EN: ${inglesCorrect}/${inglesTotal})`); // Acertos
+                formData.append('entry.1346014396', `${totalPercentage}% (PT: ${portuguesPercentage}% | EN: ${inglesPercentage}%)`); // Percentual
+                formData.append('entry.1717367788', appState.timestamp); // Data e Hora
+
+                fetch(formUrl, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors'
+                })
+                .then(() => {
+                    this.showConfirmation(totalCorrect, portuguesCorrect, inglesCorrect);
+                })
+                .catch((error) => {
+                    console.error('Erro ao enviar:', error);
+                    this.showConfirmation(totalCorrect, portuguesCorrect, inglesCorrect);
+                });
+            },
+
+            showConfirmation(totalCorrect, portuguesCorrect, inglesCorrect) {
+                const content = document.getElementById('app-content');
+
+                content.innerHTML = `
+                    <div style="text-align: center;">
+                        <h1>✅ Envio Realizado!</h1>
+                        <p style="font-size: 18px; margin: 30px 0;">Suas respostas foram registradas com sucesso.</p>
+
+                        <div class="info-box" style="text-align: left;">
+                            <h3 style="margin-top: 0;">Resumo do Envio:</h3>
+                            <p><strong>Equipe:</strong> ${appState.teamName}</p>
+                        </div>
+
+                        <p style="margin-top: 30px; font-size: 16px;">
+                            Obrigado por participar do Circuito 2025.2! Seus resultados foram enviados para a planilha de controle.
+                        </p>
+
+                        <div class="message success-message">
+                            <strong>🎯 Parabéns pela participação da sua equipe!</strong>
+                        </div>
+                    </div>
+                `;
+            }
+        };
+
+        // Iniciar
+        window.addEventListener('load', () => app.init());
+    </script>
+</body>
+</html>
